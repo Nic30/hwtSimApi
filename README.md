@@ -1,6 +1,6 @@
 # hwtSimApi
 
-[![Build Status](https://travis-ci.org/Nic30/hwtSimApi.svg?branch=master)](https://travis-ci.org/Nic30/hwtSimApi)
+[![CircleCI](https://circleci.com/gh/Nic30/hwtSimApi.svg?style=svg)](https://circleci.com/gh/Nic30/hwtSimApi)
 [![Coverage Status](https://coveralls.io/repos/github/Nic30/hwtSimApi/badge.svg?branch=master)](https://coveralls.io/github/Nic30/hwtSimApi?branch=master)
 [![PyPI version](https://badge.fury.io/py/hwtSimApi.svg)](http://badge.fury.io/py/hwtSimApi)
 
