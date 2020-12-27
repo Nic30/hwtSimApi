@@ -3,7 +3,7 @@
 [![CircleCI](https://circleci.com/gh/Nic30/hwtSimApi.svg?style=svg)](https://circleci.com/gh/Nic30/hwtSimApi)
 [![Coverage Status](https://coveralls.io/repos/github/Nic30/hwtSimApi/badge.svg?branch=master)](https://coveralls.io/github/Nic30/hwtSimApi?branch=master)
 [![PyPI version](https://badge.fury.io/py/hwtSimApi.svg)](http://badge.fury.io/py/hwtSimApi)
-
+[![Documentation Status](https://readthedocs.org/projects/hwtsimapi/badge/?version=latest)](http://hwtsimapi.readthedocs.io/en/latest/?badge=latest)
 
 This library contains an implementation of DES (Discrete Event Simulation) for communication with RTL simulators and a backup RTL simulator written in python.
 In addition there is a UVM like environment with some example interface agents.
