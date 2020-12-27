@@ -1,4 +1,4 @@
-from pycocotb.constants import Time
+from hwtSimApi.constants import Time
 
 
 def freq_to_period(f):

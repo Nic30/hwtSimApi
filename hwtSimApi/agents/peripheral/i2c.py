@@ -1,14 +1,14 @@
 from collections import deque
 from typing import Tuple, Union, Optional
 
-from pycocotb.agents.base import AgentWitReset, NOP, RX, TX
-from pycocotb.agents.peripheral.tristate import TristateAgent, TristateClkAgent,\
+from hwtSimApi.agents.base import AgentWitReset, NOP, RX, TX
+from hwtSimApi.agents.peripheral.tristate import TristateAgent, TristateClkAgent,\
     TristateSignal
-from pycocotb.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead,\
+from hwtSimApi.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead,\
     WaitTimeslotEnd
 from enum import Enum
-from pycocotb.hdlSimulator import HdlSimulator
-from pycocotb.process_utils import OnRisingCallbackLoop, OnFallingCallbackLoop
+from hwtSimApi.hdlSimulator import HdlSimulator
+from hwtSimApi.process_utils import OnRisingCallbackLoop, OnFallingCallbackLoop
 
 
 class I2C_MODE(Enum):

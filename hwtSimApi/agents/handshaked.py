@@ -1,9 +1,9 @@
 from collections import deque
 from typing import Tuple
 
-from pycocotb.agents.base import NOP, SyncAgentBase
-from pycocotb.hdlSimulator import HdlSimulator
-from pycocotb.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead
+from hwtSimApi.agents.base import NOP, SyncAgentBase
+from hwtSimApi.hdlSimulator import HdlSimulator
+from hwtSimApi.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead
 
 
 class HandshakedAgent(SyncAgentBase):

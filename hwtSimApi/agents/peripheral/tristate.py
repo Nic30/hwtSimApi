@@ -1,11 +1,11 @@
 from collections import deque
 from typing import Tuple, Union
 
-from pycocotb.agents.base import AgentWitReset, NOP
-from pycocotb.constants import CLK_PERIOD
-from pycocotb.hdlSimulator import HdlSimulator
-from pycocotb.simCalendar import DONE
-from pycocotb.triggers import Timer, WaitWriteOnly, WaitCombRead, Edge
+from hwtSimApi.agents.base import AgentWitReset, NOP
+from hwtSimApi.constants import CLK_PERIOD
+from hwtSimApi.hdlSimulator import HdlSimulator
+from hwtSimApi.simCalendar import DONE
+from hwtSimApi.triggers import Timer, WaitWriteOnly, WaitCombRead, Edge
 
 
 class TristateSignal():

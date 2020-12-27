@@ -7,10 +7,10 @@ And BAUD has to be set correctly for correct functionality.
 from collections import deque
 from typing import Tuple
 
-from pycocotb.agents.base import AgentBase
-from pycocotb.constants import Time
-from pycocotb.hdlSimulator import HdlSimulator
-from pycocotb.triggers import Timer, WaitTimeslotEnd
+from hwtSimApi.agents.base import AgentBase
+from hwtSimApi.constants import Time
+from hwtSimApi.hdlSimulator import HdlSimulator
+from hwtSimApi.triggers import Timer, WaitTimeslotEnd
 
 
 # constants for most common baud rates

@@ -74,8 +74,8 @@ Pitfalls of delta-step based HDL simulators
 from inspect import isgenerator
 from typing import List
 
-from pycocotb.simCalendar import SimTimeSlot, SimCalendar, DONE
-from pycocotb.triggers import Event, raise_StopSimulation, \
+from hwtSimApi.simCalendar import SimTimeSlot, SimCalendar, DONE
+from hwtSimApi.triggers import Event, raise_StopSimulation, \
     StopSimumulation, Action
 
 

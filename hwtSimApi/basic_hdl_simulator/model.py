@@ -1,4 +1,4 @@
-from pycocotb.basic_hdl_simulator.io import BasicRtlSimIo
+from hwtSimApi.basic_hdl_simulator.io import BasicRtlSimIo
 
 
 class BasicRtlSimModel(object):

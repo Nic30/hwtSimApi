@@ -1,10 +1,10 @@
 from enum import Enum
 from typing import Tuple, Callable, Generator, Optional
 
-from pycocotb.basic_hdl_simulator.io import BasicRtlSimIo
-from pycocotb.basic_hdl_simulator.model import BasicRtlSimModel
-from pycocotb.basic_hdl_simulator.proxy import BasicRtlSimProxy
-from pycocotb.basic_hdl_simulator.sim_utils import ValueUpdater,\
+from hwtSimApi.basic_hdl_simulator.io import BasicRtlSimIo
+from hwtSimApi.basic_hdl_simulator.model import BasicRtlSimModel
+from hwtSimApi.basic_hdl_simulator.proxy import BasicRtlSimProxy
+from hwtSimApi.basic_hdl_simulator.sim_utils import ValueUpdater,\
     ArrayValueUpdater
 
 

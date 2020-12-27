@@ -1,8 +1,8 @@
-from pycocotb.agents.base import AgentBase
-from pycocotb.constants import CLK_PERIOD
-from pycocotb.hdlSimulator import HdlSimulator
-from pycocotb.process_utils import CallbackLoop
-from pycocotb.triggers import Timer, WaitWriteOnly, WaitCombRead
+from hwtSimApi.agents.base import AgentBase
+from hwtSimApi.constants import CLK_PERIOD
+from hwtSimApi.hdlSimulator import HdlSimulator
+from hwtSimApi.process_utils import CallbackLoop
+from hwtSimApi.triggers import Timer, WaitWriteOnly, WaitCombRead
 
 
 class ClockAgent(AgentBase):

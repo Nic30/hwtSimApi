@@ -1,3 +1,2 @@
-recursive-include pycocotb/verilator/ *.cpp *.h *.c *.template
 include README.md
 include MANIFEST.in

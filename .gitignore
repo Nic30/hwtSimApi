@@ -3,7 +3,7 @@
 *.a
 *.o
 .pyc
-pycocotb.egg-info
+hwtSimApi.egg-info
 build/
 dist/
 

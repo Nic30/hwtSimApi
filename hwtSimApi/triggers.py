@@ -1,4 +1,4 @@
-from pycocotb.simCalendar import DONE
+from hwtSimApi.simCalendar import DONE
 
 
 class Event():

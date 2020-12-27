@@ -1,6 +1,6 @@
 from pyMathBitPrecise.array3t import Array3t
 from pyMathBitPrecise.bits3t import Bits3t
-from pycocotb.basic_hdl_simulator.sim_utils import valueHasChanged
+from hwtSimApi.basic_hdl_simulator.sim_utils import valueHasChanged
 
 
 class BasicRtlSimProxy():

@@ -1,7 +1,7 @@
 from inspect import isgeneratorfunction
 
-from pycocotb.hdlSimulator import HdlSimulator
-from pycocotb.triggers import Edge, WaitCombRead
+from hwtSimApi.hdlSimulator import HdlSimulator
+from hwtSimApi.triggers import Edge, WaitCombRead
 
 
 class CallbackLoop(object):

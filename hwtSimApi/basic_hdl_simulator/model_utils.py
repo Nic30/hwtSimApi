@@ -1,6 +1,6 @@
 from typing import List, Union, Tuple
 
-from pycocotb.basic_hdl_simulator.proxy import BasicRtlSimProxy
+from hwtSimApi.basic_hdl_simulator.proxy import BasicRtlSimProxy
 
 
 def sensitivity(
