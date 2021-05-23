@@ -10,7 +10,7 @@ from hwtSimApi.triggers import Timer, WaitWriteOnly, WaitCombRead, Edge
 
 class TristateSignal():
     """
-    Container of signals for controll of tristate block
+    Container of signals for control of tristate block
 
     :ivar ~.i: input - slave to master
     :ivar ~.o: output - master to slave

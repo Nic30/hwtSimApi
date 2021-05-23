@@ -13,7 +13,7 @@ class BasicRtlSimProxy():
     :ivar ~._name: signal name which was used in HDL
     :ivar ~._dtype: data type of this signal
     :ivar ~._origin: the object which was this proxy generated from
-    :ivar ~._ag: agent which controlls this proxy
+    :ivar ~._ag: agent which controls this proxy
     :ivar ~.parent: parent object
     :ivar ~.def_val: value used for initialization of value (done on sim. startup)
     :ivar ~.val: actual value of signal
