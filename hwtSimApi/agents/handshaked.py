@@ -180,12 +180,16 @@ class HandshakedAgent(SyncAgentBase):
 
         doSend = self.actualData is not NOP
 
-        # update data on signals if is required
+        # update data on signals if it is required
         if self.actualData is not self._lastWritten:
             if doSend:
                 data = self.actualData
             else:
                 data = None
+                if self._lastVld:
+                    # forward set valid=0 to prevent spike right before clock edge
+                    self.set_valid(0)
+                    self._lastVld = 0
 
             self.set_data(data)
             self._lastWritten = self.actualData
