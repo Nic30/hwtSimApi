@@ -30,6 +30,7 @@ class CallbackLoop(object):
         self.shouldBeEnabledFn = shouldBeEnabledFn
         self._callbackIndex = None
         self._enable = True
+        self._exit = False
         self.sig = sig
         self.pre_init = False
 
@@ -43,7 +44,7 @@ class CallbackLoop(object):
         if self.pre_init:
             yield from self.fn()
 
-        while True:
+        while not self._exit:
             yield Edge(self.sig)
             if self._enable and self.shouldBeEnabledFn():
                 if self.isGenerator:
@@ -62,7 +63,7 @@ class OnRisingCallbackLoop(CallbackLoop):
         if self.pre_init:
             yield from self.fn()
 
-        while True:
+        while not self._exit:
             yield Edge(self.sig)
             if self._enable and self.shouldBeEnabledFn():
                 yield WaitCombRead()
@@ -83,7 +84,7 @@ class OnFallingCallbackLoop(CallbackLoop):
         if self.pre_init:
             yield from self.fn()
 
-        while True:
+        while not self._exit:
             yield Edge(self.sig)
             if self._enable and self.shouldBeEnabledFn():
                 yield WaitCombRead()
