@@ -194,7 +194,7 @@ class HdlSimulator():
             while True:
                 now, time_slot = next_time_slot()
                 self._current_time_slot = time_slot
-                assert now >= self.now, (now, time_slot)
+                assert now >= self.now, (now, self.now, time_slot, "Can not go back in time")
                 rtl_sim.time = self.now = now
 
                 # run preinitialization of sim. environment

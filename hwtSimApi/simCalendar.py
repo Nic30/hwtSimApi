@@ -53,7 +53,7 @@ class SimTimeSlot():
 # internal
 class SimCalendar(SortedDict):
     """
-    Priority queue where key is time and priority
+    Priority queue where key is time
     """
 
     def push(self, time: int, value: SimTimeSlot):
