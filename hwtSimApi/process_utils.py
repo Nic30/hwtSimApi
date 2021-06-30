@@ -4,6 +4,10 @@ from hwtSimApi.hdlSimulator import HdlSimulator
 from hwtSimApi.triggers import Edge, WaitCombRead
 
 
+class ExitCallbackLoop(StopIteration):
+    pass
+
+
 class CallbackLoop(object):
     """
     Simple utility: process which only register other process/function
@@ -30,7 +34,6 @@ class CallbackLoop(object):
         self.shouldBeEnabledFn = shouldBeEnabledFn
         self._callbackIndex = None
         self._enable = True
-        self._exit = False
         self.sig = sig
         self.pre_init = False
 
@@ -41,16 +44,19 @@ class CallbackLoop(object):
         """
         Process for injecting of this callback loop into simulator
         """
-        if self.pre_init:
-            yield from self.fn()
+        try:
+            if self.pre_init:
+                yield from self.fn()
 
-        while not self._exit:
-            yield Edge(self.sig)
-            if self._enable and self.shouldBeEnabledFn():
-                if self.isGenerator:
-                    yield from self.fn()
-                else:
-                    self.fn()
+            while True:
+                yield Edge(self.sig)
+                if self._enable and self.shouldBeEnabledFn():
+                    if self.isGenerator:
+                        yield from self.fn()
+                    else:
+                        self.fn()
+        except ExitCallbackLoop:
+            pass
 
 
 class OnRisingCallbackLoop(CallbackLoop):
@@ -60,18 +66,21 @@ class OnRisingCallbackLoop(CallbackLoop):
     """
 
     def __call__(self):
-        if self.pre_init:
-            yield from self.fn()
+        try:
+            if self.pre_init:
+                yield from self.fn()
 
-        while not self._exit:
-            yield Edge(self.sig)
-            if self._enable and self.shouldBeEnabledFn():
-                yield WaitCombRead()
-                if int(self.sig.read()) == 1:
-                    if self.isGenerator:
-                        yield from self.fn()
-                    else:
-                        self.fn()
+            while True:
+                yield Edge(self.sig)
+                if self._enable and self.shouldBeEnabledFn():
+                    yield WaitCombRead()
+                    if int(self.sig.read()) == 1:
+                        if self.isGenerator:
+                            yield from self.fn()
+                        else:
+                            self.fn()
+        except ExitCallbackLoop:
+            pass
 
 
 class OnFallingCallbackLoop(CallbackLoop):
@@ -81,16 +90,18 @@ class OnFallingCallbackLoop(CallbackLoop):
     """
 
     def __call__(self):
-        if self.pre_init:
-            yield from self.fn()
+        try:
+            if self.pre_init:
+                yield from self.fn()
 
-        while not self._exit:
-            yield Edge(self.sig)
-            if self._enable and self.shouldBeEnabledFn():
-                yield WaitCombRead()
-                if int(self.sig.read()) == 0:
-                    if self.isGenerator:
-                        yield from self.fn()
-                    else:
-                        self.fn()
-
+            while True:
+                yield Edge(self.sig)
+                if self._enable and self.shouldBeEnabledFn():
+                    yield WaitCombRead()
+                    if int(self.sig.read()) == 0:
+                        if self.isGenerator:
+                            yield from self.fn()
+                        else:
+                            self.fn()
+        except ExitCallbackLoop:
+            pass
