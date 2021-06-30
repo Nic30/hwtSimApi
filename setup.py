@@ -11,7 +11,7 @@ setup(
     description='RTL simulator API',
     long_description=long_description,
     long_description_content_type="text/markdown",
-    author_email='michal.o.socials@gmail.com',
+    author_email='Nic30original@gmail.com',
     install_requires=[
         "sortedcontainers",  # for calendar queue in simulator
         "pyMathBitPrecise>=0.8",  # bit precise integer types for sim
