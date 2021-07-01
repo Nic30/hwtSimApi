@@ -13,8 +13,8 @@ setup(
     long_description_content_type="text/markdown",
     author_email='Nic30original@gmail.com',
     install_requires=[
-        "sortedcontainers",  # for calendar queue in simulator
-        "pyMathBitPrecise>=0.8",  # bit precise integer types for sim
+        "sortedcontainers>=2.2.2",  # for calendar queue in simulator
+        "pyMathBitPrecise>=1.0",  # bit precise integer types for sim
     ],
     classifiers=[
         "Development Status :: 3 - Alpha",
