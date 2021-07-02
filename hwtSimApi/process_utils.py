@@ -35,7 +35,6 @@ class CallbackLoop(object):
         self.fn = fn
         self.isGenerator = isgeneratorfunction(fn)
         self.shouldBeEnabledFn = shouldBeEnabledFn
-        self._callbackIndex = None
         self._enable = True
         self.sig = sig
         self.pre_init = False
@@ -48,22 +47,25 @@ class CallbackLoop(object):
         Process for injecting of this callback loop into simulator
         """
         try:
+            sig = self.sig
+            fn = self.fn
+
             if self.isGenerator:
                 if self.pre_init:
-                    yield from self.fn()
+                    yield from fn()
 
                 while True:
-                    yield Edge(self.sig)
+                    yield Edge(sig)
                     if self._enable and self.shouldBeEnabledFn():
-                        yield from self.fn()
+                        yield from fn()
             else:
                 if self.pre_init:
-                    self.fn()
+                    fn()
 
                 while True:
-                    yield Edge(self.sig)
+                    yield Edge(sig)
                     if self._enable and self.shouldBeEnabledFn():
-                        self.fn()
+                        fn()
 
         except ExitCallbackLoop:
             pass
@@ -77,26 +79,30 @@ class OnRisingCallbackLoop(CallbackLoop):
 
     def __call__(self):
         try:
+            sig = self.sig
+            fn = self.fn
+            sig_read = sig.read
+
             if self.isGenerator:
                 if self.pre_init:
-                    yield from self.fn()
+                    yield from fn()
 
                 while True:
-                    yield Edge(self.sig)
+                    yield Edge(sig)
                     if self._enable and self.shouldBeEnabledFn():
                         yield WaitCombRead()
-                        if self.sig.read():
-                            yield from self.fn()
+                        if sig_read():
+                            yield from fn()
             else:
                 if self.pre_init:
-                    self.fn()
+                    fn()
 
                 while True:
-                    yield Edge(self.sig)
+                    yield Edge(sig)
                     if self._enable and self.shouldBeEnabledFn():
                         yield WaitCombRead()
-                        if self.sig.read():
-                            self.fn()
+                        if sig_read():
+                            fn()
 
         except ExitCallbackLoop:
             pass
@@ -110,26 +116,29 @@ class OnFallingCallbackLoop(CallbackLoop):
 
     def __call__(self):
         try:
+            sig = self.sig
+            fn = self.fn
+            sig_read = sig.read
             if self.isGenerator:
                 if self.pre_init:
-                    yield from self.fn()
+                    yield from fn()
 
                 while True:
-                    yield Edge(self.sig)
+                    yield Edge(sig)
                     if self._enable and self.shouldBeEnabledFn():
                         yield WaitCombRead()
-                        if not self.sig.read():
-                            yield from self.fn()
+                        if not sig_read():
+                            yield from fn()
             else:
                 if self.pre_init:
-                    self.fn()
+                    fn()
 
                 while True:
-                    yield Edge(self.sig)
+                    yield Edge(sig)
                     if self._enable and self.shouldBeEnabledFn():
                         yield WaitCombRead()
-                        if not self.sig.read():
-                            self.fn()
+                        if not sig_read():
+                            fn()
 
         except ExitCallbackLoop:
             pass
