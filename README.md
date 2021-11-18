@@ -31,4 +31,5 @@ The simulation is an object without any special requirements which greatly simpl
 * [PyVSC](https://github.com/fvutils/pyvsc) Python package providing a library for Verification Stimulus and Coverage
 * [uvm-python](https://github.com/tpoikela/uvm-python) - cocotb based python UVM
 * [PySpice](https://github.com/FabriceSalvaire/PySpice) - Python binding for Ngspice / Xyce Simulators
+* [pysv](https://github.com/Kuree/pysv) - Python binding to System Verilog using DPI
 
