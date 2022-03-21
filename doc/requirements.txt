@@ -1,2 +1,2 @@
-git+git://github.com/Nic30/pyMathBitPrecise.git@master#egg=pyMathBitPrecise
+git+https://github.com/Nic30/pyMathBitPrecise.git@master#egg=pyMathBitPrecise
  
