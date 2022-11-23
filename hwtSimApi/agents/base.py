@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from hwtSimApi.hdlSimulator import HdlSimulator
-from hwtSimApi.process_utils import OnRisingCallbackLoop
+from hwtSimApi.process_utils import OnRisingCallbackLoop, CallbackLoop
 
 # The constant which means that the agent shouLd wait one time quantum
 # before sending a new data over an interface.
@@ -44,14 +44,14 @@ class AgentBase():
         Called before simulation to collect all drivers of interfaces
         from this agent
         """
-        return [self.driver(), ]
+        yield self.driver()
 
     def getMonitors(self):
         """
         Called before simulation to collect all monitors of interfaces
         from this agent
         """
-        return [self.monitor(), ]
+        yield self.monitor()
 
     def driver(self):
         """
@@ -97,17 +97,10 @@ class SyncAgentBase(AgentWitReset):
     def __init__(self, sim: HdlSimulator,
                  intf,
                  clk: "RtlSignal",
-                 rst: Tuple["RtlSignal", bool],
-                  wrap_monitor_and_driver_in_edge_callback=True):
+                 rst: Tuple["RtlSignal", bool]):
         super(SyncAgentBase, self).__init__(
             sim, intf, rst)
         self.clk = clk
-
-        if wrap_monitor_and_driver_in_edge_callback:
-            # run monitor, driver only on rising edge of clk
-            c = self.SELECTED_EDGE_CALLBACK
-            self.monitor = c(sim, self.clk, self.monitor, self.getEnable)
-            self.driver = c(sim, self.clk, self.driver, self.getEnable)
 
     def setEnable_asDriver(self, en: bool):
         self._enabled = en
@@ -119,9 +112,15 @@ class SyncAgentBase(AgentWitReset):
 
     def getDrivers(self):
         self.setEnable = self.setEnable_asDriver
+        c = self.SELECTED_EDGE_CALLBACK
+        if not isinstance(self.driver, c):
+            self.driver = c(self.sim, self.clk, self.driver, self.getEnable)
         return AgentBase.getDrivers(self)
 
     def getMonitors(self):
         self.setEnable = self.setEnable_asMonitor
+        c = self.SELECTED_EDGE_CALLBACK
+        if not isinstance(self.monitor, c):
+            self.monitor = c(self.sim, self.clk, self.monitor, self.getEnable)
         return AgentBase.getMonitors(self)
 

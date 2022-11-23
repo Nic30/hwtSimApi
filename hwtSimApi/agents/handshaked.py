@@ -3,7 +3,9 @@ from typing import Tuple
 
 from hwtSimApi.agents.base import NOP, SyncAgentBase
 from hwtSimApi.hdlSimulator import HdlSimulator
-from hwtSimApi.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead
+from hwtSimApi.process_utils import OnRisingCallbackLoop, OnFallingCallbackLoop
+from hwtSimApi.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead, \
+    Timer
 
 
 class HandshakedAgent(SyncAgentBase):
@@ -14,12 +16,18 @@ class HandshakedAgent(SyncAgentBase):
     which can be used for interfaces with bi-directional data streams
 
     :note: 2-phase (xor) handshake
+
+    :ivar presetBeforeClk: if this is driver set data and vld 1/4 clk period before clk tick (clk frequency must remain the same)
+        (this is a debug feature which allows user to see what happens on clk tick better)
     """
 
-    def __init__(self, sim: HdlSimulator, intf, clk: "RtlSignal",
-                 rst: Tuple["RtlSignal", bool]):
+    def __init__(self, sim: HdlSimulator, intf,
+                 clk: "RtlSignal",
+                 rst: Tuple["RtlSignal", bool],
+                 presetBeforeClk=False):
         super(HandshakedAgent, self).__init__(
             sim, intf, clk, rst)
+        self.presetBeforeClk = presetBeforeClk
         self.actualData = NOP
         self.data = deque()
 
@@ -30,7 +38,6 @@ class HandshakedAgent(SyncAgentBase):
         self._readyComnsummed = True
         # callbacks
         self._afterRead = None
-
 
     def setEnable_asDriver(self, en):
         super(HandshakedAgent, self).setEnable_asDriver(en)
@@ -103,7 +110,7 @@ class HandshakedAgent(SyncAgentBase):
                 onMonitorReady = getattr(self, "onMonitorReady", None)
                 if onMonitorReady is not None:
                     onMonitorReady()
-                self._readyComnsummed  = False
+                self._readyComnsummed = False
 
             # update rd signal only if required
             if self._lastRd != 1:
@@ -164,13 +171,33 @@ class HandshakedAgent(SyncAgentBase):
         except ValueError:
             raise AssertionError(self.sim.now, self.intf, "rd signal in invalid state")
 
-    def driver(self):
-        """
-        Push data to interface
+    def _driverPreSetPriodically(self):
+        sim = self.sim
+        c = self.SELECTED_EDGE_CALLBACK
+        period = self.clk._ag.period
 
-        set vld high and wait on rd in high then pass new data
+        if c is OnRisingCallbackLoop:
+            yield Timer(int(period // 4))
+        elif c is OnFallingCallbackLoop:
+            yield Timer(3 * int(period // 4))
+        else:
+            raise NotImplementedError(c)
+
+        while True:
+            yield WaitWriteOnly()
+            sim._schedule_proc(sim.now, self.driverPreSet())
+            yield Timer(period)
+
+    def getDrivers(self):
+        if self.presetBeforeClk:
+            yield self._driverPreSetPriodically()
+            self.driver = self.driverMarkDataSendOnClkTick
+        yield from SyncAgentBase.getDrivers(self)
+ 
+    def driverPreSet(self):
         """
-        start = self.sim.now
+        Set actual data and vld signal.
+        """
         yield WaitWriteOnly()
         if not self._enabled:
             return
@@ -204,6 +231,11 @@ class HandshakedAgent(SyncAgentBase):
             self.set_valid(vld)
             self._lastVld = vld
 
+    def driverMarkDataSendOnClkTick(self):
+        """
+        Resolve monitor rd signal and if it was 1 pop next data
+        """
+        start = self.sim.now
         if not self._enabled:
             # we can not check rd it in this function because we can not wait
             # because we can be reactivated in this same time
@@ -222,7 +254,7 @@ class HandshakedAgent(SyncAgentBase):
                 self.sim.now, self.intf,
                 "rd signal in invalid state") from None
 
-        if not vld:
+        if not self._lastVld:
             assert start == self.sim.now
             return
 
@@ -248,4 +280,13 @@ class HandshakedAgent(SyncAgentBase):
             if onDone is not None:
                 onDone()
 
+    def driver(self):
+        """
+        Push data to interface
+
+        set vld high and wait on rd in high then pass new data
+        """
+        start = self.sim.now
+        yield from self.driverPreSet()
+        yield from self.driverMarkDataSendOnClkTick()
         assert start == self.sim.now

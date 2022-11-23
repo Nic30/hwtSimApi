@@ -12,7 +12,6 @@ from hwtSimApi.constants import Time
 from hwtSimApi.hdlSimulator import HdlSimulator
 from hwtSimApi.triggers import Timer, WaitTimeslotEnd
 
-
 # constants for most common baud rates
 BAUD_9600 = 9600
 BAUD_19200 = 19200
@@ -120,13 +119,9 @@ class UartRxTxAgent(AgentBase):
         self.tx.set_baud(baud)
 
     def getDrivers(self):
-        return (
-            *self.rx.getMonitors(),
-            *self.tx.getDrivers(),
-        )
+        yield from self.rx.getMonitors()
+        yield from self.tx.getDrivers()
 
     def getMonitors(self):
-        return (
-            *self.rx.getDrivers(),
-            *self.tx.getMonitors(),
-        )
+        yield from self.rx.getDrivers()
+        yield from self.tx.getMonitors()
