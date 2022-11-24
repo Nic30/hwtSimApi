@@ -1,7 +1,7 @@
 from typing import Tuple
 
 from hwtSimApi.hdlSimulator import HdlSimulator
-from hwtSimApi.process_utils import OnRisingCallbackLoop, CallbackLoop
+from hwtSimApi.process_utils import OnRisingCallbackLoop
 
 # The constant which means that the agent shouLd wait one time quantum
 # before sending a new data over an interface.
