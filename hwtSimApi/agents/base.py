@@ -20,7 +20,7 @@ class AgentBase():
     :ivar ~._enable: flag to enable/disable this agent
     :ivar ~._debugOutput: optional stream where to print debug messages
     """
-    # because ohterwise there will be a cycle and python
+    # because otherwise there will be a cycle and python
     # will not be able to deallocate this and sim/intf
     __weakref__ = ["intf", "sim"]
 
