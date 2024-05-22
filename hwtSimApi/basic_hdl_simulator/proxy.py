@@ -9,8 +9,8 @@ class BasicRtlSimProxy():
 
     :ivar ~.callbacks: list of sim processes which will be waken up if signal value is updated
     :ivar ~.sim: main simulator
-    :ivar ~.name: name of property which is this proxy stored in on parent
-    :ivar ~._name: signal name which was used in HDL
+    :ivar ~._name: name of property which is this proxy stored in on parent
+    :ivar ~._hdlName: signal name which was used in HDL
     :ivar ~._dtype: data type of this signal
     :ivar ~._origin: the object which was this proxy generated from
     :ivar ~._ag: agent which controls this proxy
@@ -19,7 +19,7 @@ class BasicRtlSimProxy():
     :ivar ~.val: actual value of signal
     :ivar ~.val_next: place for metainformations about next update
     """
-    __slots__ = ["callbacks", "sim", "name", "_name", "parent",
+    __slots__ = ["callbacks", "sim", "_name", "_hdlName", "parent",
                  "_dtype", "_origin", "_ag",
                  "def_val", "val", "val_next",
                  "simRisingSensProcs", "simFallingSensProcs", "simSensProcs"]
@@ -33,7 +33,7 @@ class BasicRtlSimProxy():
         self.val = dtype.from_py(None)
         self.val_next = None
         # properties used for simplified associations and debug in python
-        self.name = name  # physical name
+        self._hdlName = name  # physical name
         self._name = name  # logical name
         self._dtype = dtype  # type notation for python
         self._origin = None  # signal object which this proxy substitutes
@@ -143,7 +143,7 @@ class BasicRtlSimProxy():
             return self._dtype.size
 
     def __repr__(self):
-        return f"<{self.__class__.__name__:s} {self.parent}.{self.name:s} {self.val}->{self.val_next}>"
+        return f"<{self.__class__.__name__:s} {self.parent}.{self._name:s} {self.val}->{self.val_next}>"
 
 
 class BasicRtlSimProxyArrItem():
