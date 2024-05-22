@@ -7,7 +7,7 @@ from hwtSimApi.triggers import Timer, WaitWriteOnly, WaitCombRead
 
 class ClockAgent(AgentBase):
     """
-    Simulation agent for :class:`hwt.interfaces.std.Clk` interface
+    Simulation agent for :class:`hwt.hwIOs.std.Clk` interface
 
     * In driver mode oscillates at frequency specified by period
 
@@ -18,17 +18,17 @@ class ClockAgent(AgentBase):
     :ivar ~.initWait: time to wait before starting oscillation
     """
 
-    def __init__(self, sim: HdlSimulator, intf: "RtlSignal", period: int=CLK_PERIOD):
-        super(ClockAgent, self).__init__(sim, intf)
+    def __init__(self, sim: HdlSimulator, hwIO: "RtlSignal", period: int=CLK_PERIOD):
+        super(ClockAgent, self).__init__(sim, hwIO)
         assert isinstance(period, int)
         self.period = period
         self.initWait = 0
-        self.monitor = CallbackLoop(sim, self.intf, self.monitor, self.getEnable)
+        self.monitor = CallbackLoop(sim, self.hwIO, self.monitor, self.getEnable)
 
     def driver(self):
         assert isinstance(self.period, int)
         assert isinstance(self.initWait, int)
-        sig = self.intf
+        sig = self.hwIO
         yield WaitWriteOnly()
         sig.write(0)
         yield Timer(self.initWait)
@@ -53,7 +53,7 @@ class ClockAgent(AgentBase):
         assert isinstance(self.period, int)
         assert isinstance(self.initWait, int)
         yield WaitCombRead()
-        v = self.intf.read()
+        v = self.hwIO.read()
         try:
             v = int(v)
         except ValueError:

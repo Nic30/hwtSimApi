@@ -29,8 +29,8 @@ class UartDataAgent(AgentBase):
     START_BIT = 0
     STOP_BIT = 1
 
-    def __init__(self, sim: HdlSimulator, intf: "RtlSignal", baud: int):
-        super(UartDataAgent, self).__init__(sim, intf)
+    def __init__(self, sim: HdlSimulator, hwIO: "RtlSignal", baud: int):
+        super(UartDataAgent, self).__init__(sim, hwIO)
         self.set_baud(self, baud)
         self.char_buff = []
         self.data = deque()
@@ -52,7 +52,7 @@ class UartDataAgent(AgentBase):
     def monitor(self):
         half_period = Timer(self.bit_period // 2)
         period = Timer(self.bit_period)
-        intf = self.intf
+        hwIO = self.hwIO
 
         yield half_period
 
@@ -63,7 +63,7 @@ class UartDataAgent(AgentBase):
                     continue
 
                 yield WaitTimeslotEnd()
-                d = intf.read()
+                d = hwIO.read()
                 if int(d) == self.START_BIT:
                     break
                 else:
@@ -72,7 +72,7 @@ class UartDataAgent(AgentBase):
             for _ in range(8):
                 yield period
                 yield WaitTimeslotEnd()
-                d = intf.read()
+                d = hwIO.read()
                 self.char_buff.append(d)
 
             d = int(d)
@@ -92,25 +92,25 @@ class UartDataAgent(AgentBase):
     def driver(self):
         half_period = Timer(self.bit_period // 2)
         period = Timer(self.bit_period)
-        intf = self.intf
+        hwIO = self.hwIO
         yield half_period
         while True:
             if self.getEnable() and self.data:
                 ch = self.data.popleft()
-                intf.write(self.START_BIT)
+                hwIO.write(self.START_BIT)
                 yield period
                 for i in range(8):
-                    intf.write((ch >> i) & 0b1)
+                    hwIO.write((ch >> i) & 0b1)
                     yield period
-                intf.write(self.STOP_BIT)
+                hwIO.write(self.STOP_BIT)
             yield period
 
 
 class UartRxTxAgent(AgentBase):
 
-    def __init__(self, intf: Tuple["RtlSignal", "RtlSignal"], baud: int):
-        super(UartRxTxAgent, self).__init__(intf)
-        rx, tx = intf
+    def __init__(self, hwIO: Tuple["RtlSignal", "RtlSignal"], baud: int):
+        super(UartRxTxAgent, self).__init__(hwIO)
+        rx, tx = hwIO
         self.rx = UartDataAgent(rx, baud)
         self.tx = UartDataAgent(tx, baud)
 

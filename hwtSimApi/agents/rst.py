@@ -10,14 +10,14 @@ class PullUpAgent(AgentBase):
     :note: usually used for negated reset
     """
 
-    def __init__(self, sim: HdlSimulator, intf: "RtlSignal", initDelay=int(0.6 * CLK_PERIOD)):
-        super(PullUpAgent, self).__init__(sim, intf)
+    def __init__(self, sim: HdlSimulator, hwIO: "RtlSignal", initDelay=int(0.6 * CLK_PERIOD)):
+        super(PullUpAgent, self).__init__(sim, hwIO)
         assert isinstance(initDelay, int)
         self.initDelay = initDelay
         self.data = []
 
     def driver(self):
-        sig = self.intf
+        sig = self.hwIO
         yield WaitWriteOnly()
         sig.write(0)
         yield Timer(self.initDelay)
@@ -31,14 +31,14 @@ class PullDownAgent(AgentBase):
     :note: usually used for reset
     """
 
-    def __init__(self, sim: HdlSimulator, intf: "RtlSignal", initDelay=int(0.6 * CLK_PERIOD)):
-        super(PullDownAgent, self).__init__(sim, intf)
+    def __init__(self, sim: HdlSimulator, hwIO: "RtlSignal", initDelay=int(0.6 * CLK_PERIOD)):
+        super(PullDownAgent, self).__init__(sim, hwIO)
         assert isinstance(initDelay, int)
         self.initDelay = initDelay
         self.data = []
 
     def driver(self):
-        sig = self.intf
+        sig = self.hwIO
         yield WaitWriteOnly()
         sig.write(1)
         yield Timer(self.initDelay)

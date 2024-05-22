@@ -10,9 +10,9 @@ class BasicRtlSimModel(object):
         self.sim = sim
         self._name = name
         self.io = BasicRtlSimIo()
-        self._interfaces = []
+        self._hwIOs = []
         self._processes = []
-        self._units = []
+        self._subHwModules = []
         self._outputs = {}
 
     def _init_body(self):

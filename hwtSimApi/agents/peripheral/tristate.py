@@ -32,16 +32,16 @@ class TristateAgent(AgentWitReset):
 
     def __init__(self,
                  sim: HdlSimulator,
-                 intf: TristateSignal,
+                 hwIO: TristateSignal,
                  rst: Tuple["RtlSignal", bool]):
         """
-        :param intf: tuple (i signal, o signal, t signal)
+        :param hwIO: tuple (i signal, o signal, t signal)
             as present in tristate interface
         :note: t signal controls if the output should be connected,
             if 't'=0 the 'o' does not have effect
         """
-        super(TristateAgent, self).__init__(sim, intf, rst)
-        self.i, self.o, self.t = intf.i, intf.o, intf.t
+        super(TristateAgent, self).__init__(sim, hwIO, rst)
+        self.i, self.o, self.t = hwIO.i, hwIO.o, hwIO.t
         self.data = deque()
         # can be (1: pull-up, 0: pull-down, None: disconnected)
         self.pullMode = 1  # type: Union[1, 0, None]
@@ -161,8 +161,8 @@ class TristateClkAgent(TristateAgent):
     and ignores all other components which are trying to drive this clk signal
     """
 
-    def __init__(self, sim: HdlSimulator, intf, rst: Tuple["RtlSignal", bool]):
-        super(TristateClkAgent, self).__init__(sim, intf, rst)
+    def __init__(self, sim: HdlSimulator, hwIO, rst: Tuple["RtlSignal", bool]):
+        super(TristateClkAgent, self).__init__(sim, hwIO, rst)
         self.period = CLK_PERIOD
         self.collectData = False
 

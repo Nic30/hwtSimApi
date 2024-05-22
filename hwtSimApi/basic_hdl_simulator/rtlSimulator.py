@@ -65,7 +65,7 @@ class BasicRtlSimulator():
         for p, outputs in m._outputs.items():
             assert p not in self._proc_outputs
             self._proc_outputs[p] = tuple(outputs)
-        for u in m._units:
+        for u in m._subHwModules:
             self._bound_model_procs(u)
 
     def _init_model_signals(self, model: BasicRtlSimModel) -> None:
@@ -74,11 +74,11 @@ class BasicRtlSimulator():
         * Instantiate IOs for every process
         """
         # set initial value to all signals and propagate it
-        for s in model._interfaces:
+        for s in model._hwIOs:
             if s.def_val is not None:
                 s._apply_update(ValueUpdater(s.def_val, False))
 
-        for u in model._units:
+        for u in model._subHwModules:
             self._init_model_signals(u)
 
         for p in model._processes:

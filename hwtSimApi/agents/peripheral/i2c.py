@@ -1,5 +1,5 @@
 from collections import deque
-from typing import Tuple, Union, Optional
+from typing import Tuple, Optional
 
 from hwtSimApi.agents.base import AgentWitReset, NOP, RX, TX
 from hwtSimApi.agents.peripheral.tristate import TristateAgent, TristateClkAgent,\
@@ -74,19 +74,19 @@ class I2cAgent(AgentWitReset):
     RESTART = START
     STOP = "STOP"
 
-    def __init__(self, sim: HdlSimulator, intf: Tuple[TristateSignal, TristateSignal],
+    def __init__(self, sim: HdlSimulator, hwIO: Tuple[TristateSignal, TristateSignal],
                  rst: Tuple["RtlSignal", bool]):
         """
-        :param: intf i2c interface, tuple (scl, sda) = (clock, data),
+        :param: hwIO i2c interface, tuple (scl, sda) = (clock, data),
             sda/sdc are tri-state interfaces represented by i, o, t signals
         """
-        AgentWitReset.__init__(self, sim, intf, rst)
+        AgentWitReset.__init__(self, sim, hwIO, rst)
         self.data_m = deque()
         self.data_m_read = []
         self.bit_cntrl = deque()  # type: Deque[ Tuple[Union[RX, TX], Optional[int]] ]
         self.bit_cntrl_rx = deque()  # type: Deque[Union[START, STOP, int]]
         self.start = True
-        self.sda = TristateAgent(sim, intf[1], rst)
+        self.sda = TristateAgent(sim, hwIO[1], rst)
         self.sda.collectData = False
         self.sda.selfSynchronization = False
         self.slave = False
@@ -199,7 +199,7 @@ class I2cAgent(AgentWitReset):
 
     def getMonitors(self):
         sim = self.sim
-        scl = self.intf[0]
+        scl = self.hwIO[0]
         self.scl = TristateClkAgent(
             sim, scl, (self.rst, self.rstOffIn),
         )
@@ -217,7 +217,7 @@ class I2cAgent(AgentWitReset):
 
     def getDrivers(self):
         sim = self.sim
-        scl = self.intf[0]
+        scl = self.hwIO[0]
         driver = self.driver
         self.scl = TristateClkAgent(
             sim, scl, (self.rst, self.rstOffIn),
@@ -269,8 +269,6 @@ class I2cAgent(AgentWitReset):
         self.sda._write(b)
 
     def setEnable(self, en):
-        """
-        """
         # If there is no pending transaction no pause is required
         if not self.start and not self.stop and not self.bit_cntrl:
             super(I2cAgent, self).setEnable(en)

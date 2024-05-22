@@ -16,16 +16,16 @@ class AgentBase():
     driver is used for slave interfaces
     monitor is used for master interfaces
 
-    :ivar ~.intf: interface assigned to this agent
+    :ivar ~.hio: hardware IO assigned to this agent
     :ivar ~._enable: flag to enable/disable this agent
     :ivar ~._debugOutput: optional stream where to print debug messages
     """
     # because otherwise there will be a cycle and python
-    # will not be able to deallocate this and sim/intf
-    __weakref__ = ["intf", "sim"]
+    # will not be able to deallocate this and sim/hwIO
+    __weakref__ = ["hwIO", "sim"]
 
-    def __init__(self, sim: HdlSimulator, intf):
-        self.intf = intf
+    def __init__(self, sim: HdlSimulator, hwIO):
+        self.hwIO = hwIO
         self._enabled = True
         self._debugOutput = None
         self.sim = sim
@@ -70,11 +70,11 @@ class AgentBase():
 
 class AgentWitReset(AgentBase):
 
-    def __init__(self, sim: HdlSimulator, intf, rst: Tuple["RtlSignal", bool]):
+    def __init__(self, sim: HdlSimulator, hwIO, rst: Tuple["RtlSignal", bool]):
         """
         :param rst: tuple (rst signal, rst_negated flag)
         """
-        super(AgentWitReset, self).__init__(sim, intf)
+        super(AgentWitReset, self).__init__(sim, hwIO)
         rst, rst_negated = rst
         self.rst = rst
         self.rstOffIn = int(rst_negated)
@@ -95,11 +95,11 @@ class SyncAgentBase(AgentWitReset):
     SELECTED_EDGE_CALLBACK = OnRisingCallbackLoop
 
     def __init__(self, sim: HdlSimulator,
-                 intf,
+                 hwIO,
                  clk: "RtlSignal",
                  rst: Tuple["RtlSignal", bool]):
         super(SyncAgentBase, self).__init__(
-            sim, intf, rst)
+            sim, hwIO, rst)
         self.clk = clk
 
     def setEnable_asDriver(self, en: bool):

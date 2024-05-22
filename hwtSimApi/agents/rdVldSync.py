@@ -8,7 +8,7 @@ from hwtSimApi.triggers import WaitCombStable, WaitWriteOnly, WaitCombRead, \
     Timer
 
 
-class HandshakedAgent(SyncAgentBase):
+class DataRdVldAgent(SyncAgentBase):
     """
     Simulation/verification agent for handshaked interfaces
     interface there is onMonitorReady(simulator)
@@ -21,12 +21,12 @@ class HandshakedAgent(SyncAgentBase):
         (this is a debug feature which allows user to see what happens on clk tick better)
     """
 
-    def __init__(self, sim: HdlSimulator, intf,
+    def __init__(self, sim: HdlSimulator, hwIO,
                  clk: "RtlSignal",
                  rst: Tuple["RtlSignal", bool],
                  presetBeforeClk=False):
-        super(HandshakedAgent, self).__init__(
-            sim, intf, clk, rst)
+        super(DataRdVldAgent, self).__init__(
+            sim, hwIO, clk, rst)
         self.presetBeforeClk = presetBeforeClk
         self.actualData = NOP
         self.data = deque()
@@ -40,7 +40,7 @@ class HandshakedAgent(SyncAgentBase):
         self._afterRead = None
 
     def setEnable_asDriver(self, en):
-        super(HandshakedAgent, self).setEnable_asDriver(en)
+        super(DataRdVldAgent, self).setEnable_asDriver(en)
         if en:
             # pop new data if there are not any pending
             if self.actualData is NOP and self.data:
@@ -58,7 +58,7 @@ class HandshakedAgent(SyncAgentBase):
             self._lastVld = 0
 
     def setEnable_asMonitor(self, en):
-        super(HandshakedAgent, self).setEnable_asMonitor(en)
+        super(DataRdVldAgent, self).setEnable_asMonitor(en)
         self.set_ready(int(en))
         self._lastRd = int(en)
 
@@ -135,14 +135,14 @@ class HandshakedAgent(SyncAgentBase):
                 vld = int(vld)
             except ValueError:
                 raise AssertionError(
-                    self.sim.now, self.intf,
+                    self.sim.now, self.hwIO,
                     "vld signal is in invalid state")
 
             if vld:
                 # master responded with positive ack, do read data
                 d = self.get_data()
                 if self._debugOutput is not None:
-                    name = self.intf._getFullName()
+                    name = self.hwIO._getFullName()
                     self._debugOutput.write(
                         f"{name:s}, read, {self.sim.now:d}: {d}\n")
                 self.data.append(d)
@@ -169,7 +169,7 @@ class HandshakedAgent(SyncAgentBase):
         try:
             rd = int(rd)
         except ValueError:
-            raise AssertionError(self.sim.now, self.intf, "rd signal in invalid state")
+            raise AssertionError(self.sim.now, self.hwIO, "rd signal in invalid state")
 
     def _driverPreSetPriodically(self):
         sim = self.sim
@@ -251,7 +251,7 @@ class HandshakedAgent(SyncAgentBase):
             rd = int(rd)
         except ValueError:
             raise AssertionError(
-                self.sim.now, self.intf,
+                self.sim.now, self.hwIO,
                 "rd signal in invalid state") from None
 
         if not self._lastVld:
@@ -261,7 +261,7 @@ class HandshakedAgent(SyncAgentBase):
         if rd:
             # slave did read data, take new one
             if self._debugOutput is not None:
-                name = self.intf._getFullName()
+                name = self.hwIO._getFullName()
                 self._debugOutput.write(f"{name:s}, wrote, {self.sim.now:d}: {self.actualData}\n")
 
             a = self.actualData
