@@ -39,7 +39,7 @@ class UartDataAgent(AgentBase):
         self.bit_period = Time.s // baud
         assert self.bit_period > 2, baud
 
-    def recieve_text(self) -> str:
+    def receive_text(self) -> str:
         """
         :return: data of this agent (collected form interface) as str
         """

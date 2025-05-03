@@ -64,7 +64,7 @@ class I2cAgent(AgentWitReset):
 
     ADDR_PREFIX_10b = 0b11110000
 
-    ACK = 0  # send by reciever
+    ACK = 0  # send by receiver
     NACK = 1
 
     READ = 1
@@ -110,7 +110,7 @@ class I2cAgent(AgentWitReset):
 
     def _receive_byte(self, ack: bool):
         """
-        :note: If master is a reciever the ack means that it wishes to recieve next byte
+        :note: If master is a receiver the ack means that it wishes to receive next byte
         """
         for _ in range(8):
             self.bit_cntrl.append((RX, None))
