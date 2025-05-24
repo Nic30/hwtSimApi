@@ -1,6 +1,8 @@
-from pyMathBitPrecise.array3t import Array3t
-from pyMathBitPrecise.bits3t import Bits3t
+from typing import Union
+
 from hwtSimApi.basic_hdl_simulator.sim_utils import valueHasChanged
+from pyMathBitPrecise.array3t import Array3t
+from pyMathBitPrecise.bits3t import Bits3t, Bits3val
 
 
 class BasicRtlSimProxy():
@@ -50,12 +52,13 @@ class BasicRtlSimProxy():
         assert self.sim.read_only_not_write_only
         return self.val.__copy__()
 
-    def write(self, val):
+    def write(self, val: Union[None, int, Bits3val]):
         assert not self.sim.read_only_not_write_only
         t = getattr(val, "_dtype", None)
         if t is None:
             val = self._dtype.from_py(val)
         else:
+            assert self._dtype.bit_length() == val._dtype.bit_length(), (self, val._dtype)
             val = self._dtype._from_py(
                 val.val,
                 val.vld_mask & self._dtype.all_mask()
