@@ -145,7 +145,7 @@ class BasicRtlSimProxy():
             return self._dtype.size
 
     def __repr__(self):
-        return f"<{self.__class__.__name__:s} {self.parent}.{self._name:s} {self.val}->{self.val_next}>"
+        return f"<{self.__class__.__name__:s} {self.parent}.{self._name:s} {self.val}<-{self.val_next}>"
 
 
 class BasicRtlSimProxyArrItem():
