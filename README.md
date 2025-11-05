@@ -14,8 +14,8 @@ The simulation is an object without any special requirements which greatly simpl
 
 # Installation
 
-* run `python3 setup.py install --user`
-* or from git `git clone https://github.com/Nic30/hwtSimApi.git && cd hwtSimApi && python3 setup.py install --user`
+* run `pip3 install hwtSimApi --user`
+* or from git `git clone https://github.com/Nic30/hwtSimApi.git && cd hwtSimApi && pip3 install .`
 
 
 # Similar software
