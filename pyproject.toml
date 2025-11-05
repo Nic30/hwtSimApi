@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools >= 77.0.3"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hwtSimApi"
+version = "1.3"
+dependencies = [
+  "sortedcontainers>=2.2.2",  # for calendar queue in simulator
+  "pyMathBitPrecise>=1.0",  # bit precise integer types for sim
+]
+requires-python = ">=3.8"
+authors = [
+  {name = "Michal Orsak", email = "Nic30original@gmail.com"},
+]
+
+description = "RTL simulator API"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = [
+ 'hdl', 'vhdl', 'verilog', 'systemverilog',
+ 'simulator', 'rtl']
+classifiers = [
+   "Development Status :: 3 - Alpha",
+   "Intended Audience :: Developers",
+   "License :: OSI Approved :: MIT License",
+   "Operating System :: OS Independent",
+   "Programming Language :: Python :: 3 :: Only",
+   "Programming Language :: Python :: 3",
+   "Programming Language :: Python :: 3.6",
+   "Programming Language :: Python :: 3.7",
+   "Programming Language :: Python :: 3.8",
+   "Programming Language :: Python :: 3.9",
+   "Topic :: Scientific/Engineering :: Electronic Design Automation (EDA)",
+   "Topic :: System :: Hardware",
+   "Topic :: System :: Emulators",
+   "Topic :: Utilities"
+]
+
+
+[project.urls]
+Homepage = "https://github.com/Nic30/hwtSimApi"
+Documentation = "https://hwtSimApi.readthedocs.io/en/latest/?badge=latest"
+Repository = "https://github.com/Nic30/hwtSimApi.git"
+"Bug Tracker" = "https://github.com/Nic30/hwtSimApi/issues"
