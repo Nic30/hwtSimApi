@@ -31,6 +31,10 @@ class AgentBase():
         self.sim = sim
 
     def setEnable(self, en):
+        """
+        :note: If IO should be disabled in simulation you still likely want to perform reset of IO
+               so you do not want to disable agent before simulation.
+        """
         self._enabled = en
 
     def getEnable(self):
@@ -80,6 +84,9 @@ class AgentWitReset(AgentBase):
         self.rstOffIn = int(rst_negated)
 
     def notReset(self):
+        """
+        Untility function returning state of the associated reset signal
+        """
         if self.rst is None:
             return True
 
@@ -111,6 +118,9 @@ class SyncAgentBase(AgentWitReset):
         self.monitor.setEnable(en)
 
     def getDrivers(self):
+        """
+        :note: use only before running simulator
+        """
         self.setEnable = self.setEnable_asDriver
         c = self.SELECTED_EDGE_CALLBACK
         if not isinstance(self.driver, c):
@@ -118,6 +128,9 @@ class SyncAgentBase(AgentWitReset):
         return AgentBase.getDrivers(self)
 
     def getMonitors(self):
+        """
+        :note: use only before running simulator
+        """
         self.setEnable = self.setEnable_asMonitor
         c = self.SELECTED_EDGE_CALLBACK
         if not isinstance(self.monitor, c):
