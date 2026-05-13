@@ -4,8 +4,9 @@ from typing import Tuple, Callable, Generator, Optional
 from hwtSimApi.basic_hdl_simulator.io import BasicRtlSimIo
 from hwtSimApi.basic_hdl_simulator.model import BasicRtlSimModel
 from hwtSimApi.basic_hdl_simulator.proxy import BasicRtlSimProxy
-from hwtSimApi.basic_hdl_simulator.sim_utils import ValueUpdater,\
+from hwtSimApi.basic_hdl_simulator.sim_utils import ValueUpdater, \
     ArrayValueUpdater
+from hwtSimApi.triggers import Event
 
 
 class BasicRtlSimulatorSt(Enum):
@@ -36,12 +37,12 @@ class BasicRtlSimulator():
 
     def _init_main(self):
         # container of signals in simulation
-        self.io = None  # type: BasicRtlSimIo
-        self.model = None  # type: BasicRtlSimModel
+        self.io: Optional[BasicRtlSimIo] = None 
+        self.model: Optional[BasicRtlSimModel] = None
         self.time = 0  # actual simulation time
         # if true the IO can be only read if false the IO can be only written
         self.read_only_not_write_only = False
-        self.pending_event_list = []  # List of triggered callbacks
+        self.pending_event_list: list[Event] = []  # List of triggered callbacks
         self.state = BasicRtlSimulatorSt.PRE_SET
         self._proc_outputs = {}
         self._updates_to_apply = []

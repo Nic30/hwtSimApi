@@ -72,7 +72,7 @@ Pitfalls of delta-step based HDL simulators
 """
 
 from inspect import isgenerator
-from typing import List
+from typing import Optional
 
 from hwtSimApi.simCalendar import SimTimeSlot, SimCalendar, DONE
 from hwtSimApi.triggers import Event, raise_StopSimulation, \
@@ -93,10 +93,10 @@ class HdlSimulator():
 
     def __init__(self, rtl_simulator):
         self.rtl_simulator = rtl_simulator
-        self.now = 0
+        self.now: int = 0
         self._events = SimCalendar()
-        self._current_time_slot = None  # type: SimTimeSlot
-        self._current_event_list = None  # type: List
+        self._current_time_slot: Optional[SimTimeSlot] = None
+        self._current_event_list: list[Event] = None
 
         schedule = self._events.push
 

@@ -1,4 +1,5 @@
 from hwtSimApi.basic_hdl_simulator.io import BasicRtlSimIo
+from typing import Optional
 
 
 class BasicRtlSimModel(object):
@@ -6,7 +7,7 @@ class BasicRtlSimModel(object):
     Base class for model in simulator
     """
 
-    def __init__(self, sim, name=None):
+    def __init__(self, sim: "BasicRtlSimulator", name:Optional[str]=None):
         self.sim = sim
         self._name = name
         self.io = BasicRtlSimIo()
